@@ -275,6 +275,10 @@ public class ValidationRules {
     public static final ValidationRule E054 = new ValidationRule("E054", "ERROR", "Frequency type 0 trips should not have delay set.",
             "Frequency type 0 trips should",
             "not have delay values");
+    
+    public static final ValidationRule E055 = new ValidationRule("E055", "ERROR", "StopTimeUpdate.ScheduleRelationship should not be SCHEDULED or SKIPPPED for frequency type 0 trips.",
+            "Frequency type 0 trip updated should",
+            "not be marked as SCHEDULED");
 
     private static List<ValidationRule> mAllRules = new ArrayList<>();
 

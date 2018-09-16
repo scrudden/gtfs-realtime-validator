@@ -2,6 +2,7 @@ package edu.usf.cutr.gtfsrtvalidator.lib.test.rules;
 
 import com.google.transit.realtime.GtfsRealtime;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
+import com.google.transit.realtime.GtfsRealtime.TripUpdate.StopTimeUpdate.ScheduleRelationship;
 
 import edu.usf.cutr.gtfsrtvalidator.lib.model.ValidationRule;
 import edu.usf.cutr.gtfsrtvalidator.lib.test.FeedMessageTest;
@@ -392,6 +393,69 @@ public class FrequencyTypeZeroValidatorTest extends FeedMessageTest {
 
         results = frequencyTypeZeroValidator.validate(TimestampUtils.MIN_POSIX_TIME, bullRunnerGtfs, bullRunnerGtfsMetadata, feedMessageBuilder.build(), null, null);
         expected.put(ValidationRules.E054, 1);
+        TestUtils.assertResults(expected, results);
+        expected.clear();
+        clearAndInitRequiredFeedFields();       
+    }
+    /**
+     * E055- StopTimeUpdate.ScheduleRelationship should not be SCHEDULED or SKIPPPED for frequency type 0 trips
+     */
+    @Test
+    public void testE055()
+    {
+    	FrequencyTypeZeroValidator frequencyTypeZeroValidator = new FrequencyTypeZeroValidator();
+        Map<ValidationRule, Integer> expected = new HashMap<>();
+        FeedMessage[] feedMessages= new FeedMessage[2];
+        
+        GtfsRealtime.TripDescriptor.Builder tripDescriptorBuilder = GtfsRealtime.TripDescriptor.newBuilder();
+        
+        tripDescriptorBuilder.setTripId("1");
+        tripDescriptorBuilder.setStartDate("4-24-2016");
+       
+        tripDescriptorBuilder.setStartTime("08:00:00AM");
+        	       
+        
+        GtfsRealtime.VehicleDescriptor.Builder vehicleDescriptorBuilder = GtfsRealtime.VehicleDescriptor.newBuilder();
+                
+        vehicleDescriptorBuilder.setId("1");
+        
+        vehiclePositionBuilder.setVehicle(vehicleDescriptorBuilder.build());
+        vehiclePositionBuilder.setTimestamp(TimestampUtils.MIN_POSIX_TIME);
+        vehiclePositionBuilder.setTrip(tripDescriptorBuilder.build());
+        vehiclePositionBuilder.setVehicle(vehicleDescriptorBuilder.build());
+                                
+        feedEntityBuilder.setVehicle(vehiclePositionBuilder.build());
+
+        feedMessageBuilder.setEntity(0, feedEntityBuilder.build());
+        
+        tripUpdateBuilder.setVehicle(vehicleDescriptorBuilder.build());
+        tripUpdateBuilder.setTrip(tripDescriptorBuilder.build());
+        
+       
+        GtfsRealtime.TripUpdate.StopTimeUpdate.Builder stopTimeUpdateBuilder = GtfsRealtime.TripUpdate.StopTimeUpdate.newBuilder();
+        	        
+        stopTimeUpdateBuilder.setStopId(""+1);
+        stopTimeUpdateBuilder.setStopSequence(1);
+        
+        
+        GtfsRealtime.TripUpdate.StopTimeEvent.Builder stopTimeEventBuilder =  GtfsRealtime.TripUpdate.StopTimeEvent.newBuilder();
+        
+        stopTimeUpdateBuilder.setArrival(stopTimeEventBuilder.build());
+        
+		stopTimeUpdateBuilder.setScheduleRelationship(ScheduleRelationship.SCHEDULED);
+                
+        tripUpdateBuilder.addStopTimeUpdate(stopTimeUpdateBuilder.build());
+          
+        feedEntityBuilder.setTripUpdate(tripUpdateBuilder.build());
+                    
+        feedEntityBuilder.setVehicle(vehiclePositionBuilder.build());
+	
+        feedMessageBuilder.setEntity(0, feedEntityBuilder.build());
+
+        results = frequencyTypeZeroValidator.validate(TimestampUtils.MIN_POSIX_TIME, bullRunnerGtfs, bullRunnerGtfsMetadata, feedMessageBuilder.build(), null, null);
+        
+        expected.put(ValidationRules.E055, 1);
+        
         TestUtils.assertResults(expected, results);
         expected.clear();
         clearAndInitRequiredFeedFields();       

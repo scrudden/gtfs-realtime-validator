@@ -56,6 +56,7 @@ Rules are declared in the [`ValidationRules` class](https://github.com/CUTR-at-U
 | [E052](#E052) | `vehicle.id` is not unique
 | [E053](#E053) | `start_time` for trip has changed
 | [E054](#E054) | `delay` for freq based trip with exact times=0 is set 
+| [E055](#E055) | `StopTimeUpdate.ScheduleRelationship` should not be SCHEDULED or SKIPPPED for frequency type 0 trips
 
 ### Table of Warnings
 
@@ -737,6 +738,13 @@ From [TripUpdate](https://github.com/google/transit/blob/master/gtfs-realtime/sp
 
 >Delay should only be specified when the prediction is given relative to some existing schedule in GTFS. 
 
+### E055 - `StopTimeUpdate.ScheduleRelationship` should not be SCHEDULED or SKIPPPED for frequency type 0 trips
+
+ StopTimeUpdate.ScheduleRelationship should not be SCHEDULED or SKIPPPED for frequency type 0
+
+From [StopTimeUpdate.ScheduleRelationship](https://github.com/google/transit/issues/102) for `ScheduleRelationship`:
+
+>Requires update to specification. 
 
 # Warnings
 

@@ -55,6 +55,7 @@ public class FrequencyTypeZeroValidator implements FeedEntityValidator {
         List<OccurrenceModel> errorListW005 = new ArrayList<>();
         List<OccurrenceModel> errorListE053 = new ArrayList<>();
         List<OccurrenceModel> errorListE054 = new ArrayList<>();
+        List<OccurrenceModel> errorListE055 = new ArrayList<>();
 
         for (GtfsRealtime.FeedEntity entity : feedMessage.getEntityList()) {
             if (entity.hasTripUpdate()) {
@@ -128,6 +129,10 @@ public class FrequencyTypeZeroValidator implements FeedEntityValidator {
                     			RuleUtils.addOccurrence(E054, "vehicle_id " + tripUpdate.getVehicle().getId(),  errorListE054, _log);
                     		}
                     	}
+                    	if(stopTimeUpdate.hasScheduleRelationship())
+                    	{
+                    		RuleUtils.addOccurrence(E055, "vehicle_id " + tripUpdate.getVehicle().getId(),  errorListE055, _log);
+                    	}
                     }
                 }
             }
@@ -162,6 +167,8 @@ public class FrequencyTypeZeroValidator implements FeedEntityValidator {
                 }
             }
         }
+                
+        
         List<ErrorListHelperModel> errors = new ArrayList<>();
         if (!errorListE006.isEmpty()) {
             errors.add(new ErrorListHelperModel(new MessageLogModel(E006), errorListE006));
@@ -178,6 +185,10 @@ public class FrequencyTypeZeroValidator implements FeedEntityValidator {
         if (!errorListE054.isEmpty()) {
             errors.add(new ErrorListHelperModel(new MessageLogModel(E054), errorListE054));
         }
+        if (!errorListE055.isEmpty()) {
+            errors.add(new ErrorListHelperModel(new MessageLogModel(E055), errorListE055));
+        }
+
         return errors;
     }
 }
